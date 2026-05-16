@@ -160,6 +160,15 @@ test_outputs/
 
 
 # ------------------------------------------------------------
+# TAPipeline / Maya pip-installed third-party deps
+# Managed by launch.bat via mayapy -m pip install -t.
+# Keep the directory itself, ignore its contents.
+# ------------------------------------------------------------
+/toolkit/Maya2026/python/3.11/*
+!/toolkit/Maya2026/python/3.11/.gitkeep
+
+
+# ------------------------------------------------------------
 # Perforce local files
 # ------------------------------------------------------------
 .p4tickets

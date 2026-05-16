@@ -1,6 +1,0 @@
-string $info = `whatIs userSetup`;
-string $melPath = `substituteAllString $info "Script found in: " ""`;
-string $dir = `dirname $melPath`;
-string $pyPath = ($dir + "/userSetup_2026.py");
-
-python("exec(open(r'" + $pyPath + "', encoding='utf-8').read())");

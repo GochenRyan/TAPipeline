@@ -1,0 +1,21 @@
+# ------------------------------------------------------------
+# TAPipeline runtime Python dependencies for Maya 2026
+# ------------------------------------------------------------
+# launch.bat runs:
+#   mayapy.exe -m pip install -r <this file> -t toolkit/Maya2026/python/3.11
+#
+# Rules:
+#   - Do NOT list packages that Maya 2026 already ships
+#     (PySide6, shiboken6, numpy, pip, setuptools).
+#     Re-installing them locally will shadow Maya's bundled copies
+#     and can break Qt / Python at runtime.
+#   - Do NOT list IDE-only packages (e.g. maya-stubs, type stubs).
+#     Those belong in a developer-side venv, not Maya's runtime.
+#   - Pin versions for reproducibility.
+#
+# Bundled with Maya 2026 (do not duplicate):
+#   Python    3.11.9
+#   PySide6   6.5.3
+#   shiboken6 6.5.3
+#   numpy     1.26.4
+# ------------------------------------------------------------
