@@ -1,6 +1,6 @@
 from maya import cmds, mel
 
-from . import logger
+from . import debug, logger
 
 MENU_NAME = "TAPipelineMenu"
 MENU_LABEL = "TAPipeline"
@@ -35,6 +35,14 @@ def create() -> str:
             button=["OK"],
         ),
     )
+
+    cmds.menuItem(divider=True, parent=menu)
+    cmds.menuItem(
+        label="Enable Debugpy (5678)",
+        parent=menu,
+        command=lambda *_: _enable_debugpy(),
+    )
+
     cmds.menuItem(divider=True, parent=menu)
     cmds.menuItem(
         label="Reload Bootstrap",
@@ -46,9 +54,42 @@ def create() -> str:
     return menu
 
 
+def _enable_debugpy() -> None:
+    log = logger.get_logger()
+    try:
+        host, port = debug.enable()
+    except Exception as exc:
+        log.exception("Failed to enable debugpy")
+        cmds.confirmDialog(
+            title="TAPipeline — Debugpy",
+            message=f"Failed to enable debugpy:\n\n{exc}",
+            button=["OK"],
+            icon="critical",
+        )
+        return
+
+    cmds.confirmDialog(
+        title="TAPipeline — Debugpy",
+        message=(
+            f"debugpy listening on {host}:{port}\n\n"
+            "In VSCode: Run and Debug → Attach Maya."
+        ),
+        button=["OK"],
+    )
+
 def _reload() -> None:
     import importlib
-    from . import bootstrap as _bootstrap
+    import sys
 
-    importlib.reload(_bootstrap)
+    pkg = __package__
+    names = [
+        n for n in list(sys.modules)
+        if n == pkg or n.startswith(pkg + ".")
+    ]
+
+    # First, reload the sub-modules (those with more points should be loaded first), and finally reload the package itself.
+    for name in sorted(names, key=lambda n: n.count("."), reverse=True):
+        importlib.reload(sys.modules[name])
+
+    from . import bootstrap as _bootstrap
     _bootstrap.run()
